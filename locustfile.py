@@ -1,7 +1,6 @@
-from locust import HttpLocust, TaskSet, task, between
-from gevent import GreenletExit
-from locust.exception import StopLocust
-from otree import __version__
+from locust import TaskSet, task, between, HttpUser
+from locust.exception import StopUser
+
 # this is not the best - in case oTree decides to change the bot complete message later.
 
 ########### BLOCK: FOR OLD (<2.6)  otree version ##############################################################
@@ -61,10 +60,10 @@ class OtreeTaskSet(TaskSet):
     @task(1)
     def start_bot(self):
         self.otree_client.first_page()
-        raise StopLocust()
+        raise StopUser()
 
 
-class WebsiteUser(HttpLocust):
+class WebsiteUser(HttpUser):
     wait_time = between(5, 9)
     host = 'http://localhost:8000'
-    task_set = OtreeTaskSet
+    tasks = [OtreeTaskSet]
